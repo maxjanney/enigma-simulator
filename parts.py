@@ -52,15 +52,14 @@ ALPHABET = ascii_uppercase
 
 class Rotor:
   def __init__(self, rotor_num, window, prev_rotor=None):
-    if rotor_num in ROTOR_NUMS:
-      self.wiring = ROTOR_WIRINGS[rotor_num]
-      self.notch = ROTOR_NOTCHES[rotor_num]
-      self.window = window.upper()
-      self.offset = ALPHABET.index(self.window)
-      self.next_rotor = None
-      self.prev_rotor = prev_rotor
-    else:
+    if rotor_num not in ROTOR_NUMS:
       raise Exception('Rotor number must be I, II, III, IV, or V')
+    self.wiring = ROTOR_WIRINGS[rotor_num]
+    self.notch = ROTOR_NOTCHES[rotor_num]
+    self.window = window.upper()
+    self.offset = ALPHABET.index(self.window)
+    self.next_rotor = None
+    self.prev_rotor = prev_rotor
 
   def step(self):
     if self.next_rotor and self.window == self.notch:
@@ -75,7 +74,7 @@ class Rotor:
     encoded_index = (ALPHABET.index(encoded_letter) - self.offset) % 26
     # going forward
     if self.next_rotor and forward:
-      return self.next_rotor.encipher_letter(ALPHABET[encoded_index], True)
+      return self.next_rotor.encipher_letter(ALPHABET[encoded_index], forward)
     # going backwards
     elif self.prev_rotor and not forward:
       return self.prev_rotor.encipher_letter(ALPHABET[encoded_index], forward)
